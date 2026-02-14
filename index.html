@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GraphQL Profile</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="container">
+
+    <!-- LOGIN VIEW -->
+    <section id="loginView" class="card login-card">
+      <h1 class="title">Login</h1>
+      <p class="subtitle">Use username/email + password</p>
+
+      <div class="login-grid">
+        <label class="field">
+          <span class="label">Identifier</span>
+          <input id="identifier" placeholder="username or email" autocomplete="username" />
+        </label>
+
+        <label class="field">
+          <span class="label">Password</span>
+          <input id="password" type="password" placeholder="password" autocomplete="current-password" />
+        </label>
+
+        <button id="loginBtn" class="btn" type="button">Login</button>
+        <p id="error" class="error"></p>
+      </div>
+    </section>
+
+    <!-- PROFILE VIEW -->
+    <section id="profileView" class="hidden">
+      <header class="topbar">
+        <div>
+          <h1 class="title">My Profile</h1>
+          <p class="subtitle" id="welcomeText">—</p>
+        </div>
+        <button id="logoutBtn" class="btn btn-ghost" type="button">Logout</button>
+      </header>
+
+      <!-- BENTO HOME -->
+      <section class="bento">
+        <!-- XP CARD -->
+        <div class="card xp-card">
+          <h2 class="card-title">XP</h2>
+          <div class="big-number" id="totalXp">0</div>
+
+          <div class="transaction-list no-scroll" id="trans-list">
+            <div class="muted">No transactions yet.</div>
+          </div>
+
+          <button id="seeMoreXpBtn" class="btn btn-ghost" type="button">See more</button>
+        </div>
+
+        <!-- AUDITS CARD -->
+        <div class="card audits-card">
+          <h2 class="card-title">Audits</h2>
+          <div id="auditsList" class="audits-list">
+            <div class="muted">No audits yet.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- STATS (hidden on tx page) -->
+      <div class="card graphs-card" id="statsCard">
+        <h2 class="card-title">Stats</h2>
+
+        <div class="graph-block">
+          <div class="graph-title">XP Over Time</div>
+          <svg id="xpChart" class="svg-chart" viewBox="0 0 700 220" role="img"></svg>
+        </div>
+
+        <div class="graph-block">
+          <div class="graph-title">XP Earned by Project</div>
+          <div class="chart-scroll">
+            <svg id="xpByProjectChart" class="svg-chart" viewBox="0 0 700 260" role="img"></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- TRANSACTIONS VIEW -->
+      <section id="txView" class="hidden">
+        <header class="topbar">
+          <div>
+            <h1 class="title">Transactions History</h1>
+            <p class="subtitle">Full history</p>
+          </div>
+          <button id="backToProfileBtn" class="btn btn-ghost" type="button">Back</button>
+        </header>
+
+        <div class="card">
+          <div id="txFullList" class="transaction-list page-list">
+            <div class="muted">Loading...</div>
+          </div>
+        </div>
+      </section>
+    </section>
+
+  </div>
+
+  <script src="auth.js"></script>
+  <script src="graphql.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
