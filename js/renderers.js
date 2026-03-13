@@ -1,89 +1,13 @@
-const loginView = document.getElementById("loginView");
-const profileView = document.getElementById("profileView");
-const txView = document.getElementById("txView");
+/**
+ * Rendering functions for lists and charts
+ */
 
-const bentoView = document.querySelector(".bento");
-const statsCardEl = document.getElementById("statsCard");
+// ==================== LIST RENDERING ====================
 
-const loginBtn = document.getElementById("loginBtn");
-const logoutBtn = document.getElementById("logoutBtn");
-const backToProfileBtn = document.getElementById("backToProfileBtn");
-const seeMoreXpBtn = document.getElementById("seeMoreXpBtn");
-
-const totalXpEl = document.getElementById("totalXp");
-const errorEl = document.getElementById("error");
-const auditsListEl = document.getElementById("auditsList");
-const welcomeTextEl = document.getElementById("welcomeText");
-
-const txPreviewList = document.getElementById("trans-list");
-const txFullList = document.getElementById("txFullList");
-
-// Charts
-const xpChartEl = document.getElementById("xpChart");
-const xpByProjectChartEl = document.getElementById("xpByProjectChart");
-
-let cachedTransactions = [];
-
-/* ---------------- VIEW HELPERS ---------------- */
-
-function showLogin() {
-  loginView.classList.remove("hidden");
-  profileView.classList.add("hidden");
-}
-
-function showProfile() {
-  loginView.classList.add("hidden");
-  profileView.classList.remove("hidden");
-}
-
-function showProfileHome() {
-  txView?.classList.add("hidden");
-  bentoView?.classList.remove("hidden");
-  statsCardEl?.classList.remove("hidden");
-}
-
-function showTransactions() {
-  bentoView?.classList.add("hidden");
-  statsCardEl?.classList.add("hidden");
-  txView?.classList.remove("hidden");
-}
-
-/* ---------------- FORMAT HELPERS ---------------- */
-
-function sumXP(transactions) {
-  return (transactions || []).reduce((sum, t) => sum + (t.amount || 0), 0);
-}
-
-function formatXP(xp) {
-  const n = Number(xp) || 0;
-
-  if (n < 1000) return `${Math.ceil(n)} B`;
-  if (n < 1_000_000) return `${Math.ceil(n / 1000)} kB`;
-
-  const mb = n / 1_000_000;
-  return `${Math.ceil(mb * 100) / 100} MB`;
-}
-
-function formatBytes(bytes) {
-  return formatXP(bytes);
-}
-
-function fmtDate(iso) {
-  const d = new Date(iso);
-  return Number.isNaN(d.getTime()) ? "—" : d.toISOString().slice(0, 10);
-}
-
-function escapeHTML(s) {
-  return String(s ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
-/* ---------------- RENDER LISTS ---------------- */
-
+/**
+ * Renders the audits list in the UI
+ * @param {Array} audits - Array of audit objects
+ */
 function renderAuditsList(audits) {
   if (!auditsListEl) return;
 
@@ -118,6 +42,12 @@ function renderAuditsList(audits) {
   }).join("");
 }
 
+/**
+ * Renders transaction list in specified element
+ * @param {HTMLElement} listEl - Element to render transactions in
+ * @param {Array} transactions - Array of transaction objects
+ * @param {number|null} limit - Maximum number of transactions to show
+ */
 function renderTx(listEl, transactions, limit = null) {
   if (!listEl) return;
 
@@ -146,8 +76,13 @@ function renderTx(listEl, transactions, limit = null) {
   }).join("");
 }
 
-/* ---------------- CHARTS ---------------- */
+// ==================== CHART RENDERING ====================
 
+/**
+ * Draws XP progression line chart
+ * @param {SVGElement} svgEl - SVG element to draw chart in
+ * @param {Array} transactions - Array of transaction objects
+ */
 function drawXpLineChart(svgEl, transactions) {
   if (!svgEl) return;
 
@@ -212,7 +147,11 @@ function drawXpLineChart(svgEl, transactions) {
   `;
 }
 
-// SIMPLE horizontal bar chart with readable names
+/**
+ * Draws horizontal bar chart showing XP by project
+ * @param {SVGElement} svgEl - SVG element to draw chart in
+ * @param {Array} transactions - Array of transaction objects
+ */
 function drawXpByProjectBars(svgEl, transactions) {
   if (!svgEl) return;
 
@@ -272,136 +211,3 @@ function drawXpByProjectBars(svgEl, transactions) {
 
   svgEl.innerHTML = `<g>${rows}</g>`;
 }
-
-/* ---------------- DATA LOADING ---------------- */
-
-async function loadProfile(token) {
-  errorEl.textContent = "";
-
-  const userQuery = `
-  {
-    user { id login }
-  }`;
-
-  const userData = await gqlRequest(userQuery, token);
-  if (!userData.user || !userData.user.length) throw new Error("Could not load user.");
-
-  const user = userData.user[0];
-  const userId = user.id;
-
-  const xpQuery = `
-  {
-    transaction(
-      where: {
-        type: { _eq: "xp" }
-        path: { _like: "/bahrain/bh-module/%" }
-        object: { type: { _in: ["project", "piscine"] } }
-      }
-      order_by: { createdAt: desc }
-    ) {
-      path
-      amount
-      createdAt
-      object { name type }
-    }
-  }`;
-
-  const myGroupsQuery = `
-  {
-    group_user(where: { userId: { _eq: ${userId} } }) {
-      groupId
-    }
-  }`;
-
-  const [xpData, myGroupsData] = await Promise.all([
-    gqlRequest(xpQuery, token),
-    gqlRequest(myGroupsQuery, token)
-  ]);
-
-  cachedTransactions = xpData.transaction || [];
-
-  totalXpEl.textContent = formatXP(sumXP(cachedTransactions));
-  renderTx(txPreviewList, cachedTransactions, 6);
-
-  const groupIds = (myGroupsData.group_user || []).map(g => g.groupId).filter(Boolean);
-
-  let auditsData = { audit: [] };
-  if (groupIds.length > 0) {
-    const auditsReceivedQuery = `
-    {
-      audit(
-        where: {
-          groupId: { _in: [${groupIds.join(",")}] }
-          grade: { _is_null: false }
-          auditorId: { _neq: ${userId} }
-        }
-        order_by: { createdAt: desc }
-      ) {
-        id groupId grade createdAt auditorId
-        group { object { name type } }
-      }
-    }`;
-    auditsData = await gqlRequest(auditsReceivedQuery, token);
-  }
-
-  renderAuditsList(auditsData.audit);
-
-  if (welcomeTextEl) welcomeTextEl.textContent = `@${user.login}`;
-
-  drawXpLineChart(xpChartEl, cachedTransactions);
-  drawXpByProjectBars(xpByProjectChartEl, cachedTransactions);
-
-  showProfile();
-  showProfileHome();
-}
-
-/* ---------------- EVENTS ---------------- */
-
-loginBtn?.addEventListener("click", async () => {
-  try {
-    errorEl.textContent = "";
-    const id = document.getElementById("identifier").value.trim();
-    const password = document.getElementById("password").value;
-
-    const token = await loginRequest(id, password);
-    await loadProfile(token);
-  } catch (err) {
-    errorEl.textContent = err.message || "Login failed";
-  }
-});
-
-logoutBtn?.addEventListener("click", () => {
-  removeToken();
-  cachedTransactions = [];
-
-  errorEl.textContent = "";
-  totalXpEl.textContent = "0";
-
-  renderAuditsList([]);
-  renderTx(txPreviewList, []);
-  renderTx(txFullList, []);
-
-  if (xpChartEl) xpChartEl.innerHTML = "";
-  if (xpByProjectChartEl) xpByProjectChartEl.innerHTML = "";
-
-  showLogin();
-});
-
-seeMoreXpBtn?.addEventListener("click", () => {
-  showTransactions();
-  renderTx(txFullList, cachedTransactions);
-});
-
-backToProfileBtn?.addEventListener("click", () => {
-  showProfileHome();
-});
-
-(function init() {
-  const token = getToken();
-  if (!token) return showLogin();
-
-  loadProfile(token).catch(() => {
-    removeToken();
-    showLogin();
-  });
-})();
