@@ -80,6 +80,8 @@ async function loadProfile(token) {
   renderAuditsList(auditsData.audit);
 
   if (welcomeTextEl) welcomeTextEl.textContent = `@${user.login}`;
+  const userIdTextEl = document.getElementById("userIdText");
+  if (userIdTextEl) userIdTextEl.textContent = `User ID: ${userId}`;
 
   drawXpLineChart(xpChartEl, cachedTransactions);
   drawXpByProjectBars(xpByProjectChartEl, cachedTransactions);

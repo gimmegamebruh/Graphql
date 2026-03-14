@@ -1,102 +1,46 @@
 # GraphQL Profile Viewer
 
-## 🎯 Project Objective
+A web application that displays user profile information from a GraphQL API, including XP (experience points), audits, and transaction history.
 
-The objective of this project is to learn the GraphQL query language by creating a personal profile page that displays school information and statistics. This application demonstrates practical GraphQL usage by querying real data from the Reboot01 platform's GraphQL endpoint.
+## Features
 
-## ✨ Features Implemented
+- User authentication via JWT tokens
+- Display of user XP and transaction history
+- Audit results visualization
+- Interactive charts showing XP progression over time
+- XP breakdown by project
 
-### 🔐 Authentication
-- JWT-based login system
-- Secure token management with localStorage
-- Automatic session handling
-
-### 👤 Profile Information Display
-- **Basic user identification** (username/login)
-- **XP amount** with formatted display (B, kB, MB)
-- **Audit results** with PASS/FAIL status and grades
-- **Transaction history** with detailed XP breakdowns
-
-### 📊 Statistics & Data Visualization
-**Mandatory SVG-based graphs:**
-- **XP Progression Over Time** - Line chart showing XP growth timeline
-- **XP Earned by Project** - Horizontal bar chart ranking projects by XP contribution
-
-### 🎨 UI/UX Design
-- Modern, responsive design with dark theme
-- Clean card-based layout
-- Smooth transitions and hover effects
-- Mobile-friendly interface
-- Intuitive navigation between views
-
-## 🛠 Technical Implementation
-
-### GraphQL Integration
-- **Endpoint**: `https://learn.reboot01.com/api/graphql-engine/v1/graphql`
-- **Queries**: User data, XP transactions, audit results, group information
-- **Authentication**: Bearer token authorization
-
-### Data Visualizations (SVG)
-- **XP Over Time Chart**: Cumulative XP progression with date axis
-- **Project XP Chart**: Horizontal bars showing XP distribution across projects
-- **Interactive Elements**: Hover states and responsive design
-- **Data Processing**: Real-time calculation of statistics and aggregations
-
-### Code Architecture
-- **Modular JavaScript**: Separated concerns across multiple files
-- **DOM Management**: Efficient element selection and manipulation
-- **Error Handling**: Comprehensive error states and user feedback
-- **Performance**: Optimized rendering and data caching
-
-## 📁 Project Structure
+## Project Structure
 
 ```
-├── index.html          # Main HTML page with semantic structure
+├── index.html          # Main HTML page
 ├── css/
-│   └── style.css       # Modern CSS with custom properties and animations
+│   └── style.css       # Application styles
 ├── js/
-│   ├── app.js          # Main entry point with DOM constants and initialization
+│   ├── app.js          # Main application entry point with DOM constants and initialization
 │   ├── auth.js         # Authentication functions (login/logout/token management)
-│   ├── graphql.js      # GraphQL API client with error handling
-│   ├── utils.js        # Utility functions (XP formatting, date handling, HTML escaping)
+│   ├── graphql.js      # GraphQL API client
+│   ├── utils.js        # Utility functions (formatting, date handling, HTML escaping)
 │   ├── views.js        # View management functions (show/hide UI sections)
-│   ├── renderers.js    # List and chart rendering functions with SVG generation
-│   ├── api.js          # Data loading functions with GraphQL query orchestration
+│   ├── renderers.js    # List and chart rendering functions
+│   ├── api.js          # Data loading functions (GraphQL queries)
 │   └── events.js       # Event handlers for user interactions
-└── README.md           # This documentation
+└── README.md           # This file
 ```
 
-## 🚀 Usage
+## Usage
 
-1. Open `index.html` in a modern web browser
-2. Enter your Reboot01 username/email and password
-3. Authenticate to access your personal data
-4. Explore your profile information, XP history, and audit results
-5. View interactive statistics graphs showing your learning journey
+1. Open `index.html` in a web browser
+2. Enter your username/email and password
+3. View your profile information, XP, audits, and transaction history
 
-## 🏗 Technologies Used
+## API
 
-- **Frontend**: HTML5, CSS3, JavaScript (ES6+)
-- **API**: GraphQL with custom queries
-- **Authentication**: JWT tokens
-- **Data Visualization**: Pure SVG (no external libraries)
-- **Styling**: Modern CSS with CSS custom properties
-- **Architecture**: Modular JavaScript with separation of concerns
+This application connects to the Reboot01 GraphQL API at `https://learn.reboot01.com/api/graphql-engine/v1/graphql`.
 
-## 📈 GraphQL Queries Used
+## Technologies Used
 
-The application performs several GraphQL queries:
-- User identification and basic info
-- XP transactions filtered by module and type
-- Audit results with grades and group information
-- Group membership for audit access
-
-## 🎯 Learning Outcomes
-
-This project demonstrates:
-- GraphQL query construction and execution
-- JWT authentication flow
-- SVG-based data visualization
-- Modern JavaScript modular architecture
-- Responsive web design principles
-- API integration and error handling
+- HTML5
+- CSS3
+- JavaScript (ES6+)
+- GraphQL
