@@ -31,7 +31,6 @@ const overviewUsernameEl = document.getElementById("overviewUsername");
 const overviewUserIdEl = document.getElementById("overviewUserId");
 const overviewTotalXpEl = document.getElementById("overviewTotalXp");
 const overviewAuditsCountEl = document.getElementById("overviewAuditsCount");
-const overviewCurrentProjectEl = document.getElementById("overviewCurrentProject");
 
 // Transaction lists
 const txPreviewList = document.getElementById("trans-list");

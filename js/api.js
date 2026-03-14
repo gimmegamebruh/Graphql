@@ -105,11 +105,6 @@ async function loadProfile(token) {
   if (overviewTotalXpEl) overviewTotalXpEl.textContent = formatXP(sumXP(cachedTransactions));
   if (overviewAuditsCountEl) overviewAuditsCountEl.textContent = deduplicatedAudits.length;
 
-  // Get current project (most recent from XP transactions)
-  const currentProject = cachedTransactions.length > 0 ?
-    cachedTransactions[cachedTransactions.length - 1].object.name : 'None';
-  if (overviewCurrentProjectEl) overviewCurrentProjectEl.textContent = currentProject;
-
   renderAuditsList(deduplicatedAudits);
 
   console.log('User data:', user);
