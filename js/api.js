@@ -82,7 +82,17 @@ async function loadProfile(token) {
     auditsData = await gqlRequest(auditsReceivedQuery, token);
   }
 
-  renderAuditsList(auditsData.audit);
+  // Deduplicate audits by project name, keeping the most recent one
+  const uniqueAudits = {};
+  auditsData.audit.forEach(audit => {
+    const projectName = audit.group?.object?.name || `Group #${audit.groupId}`;
+    if (!uniqueAudits[projectName] || new Date(audit.createdAt) > new Date(uniqueAudits[projectName].createdAt)) {
+      uniqueAudits[projectName] = audit;
+    }
+  });
+  const deduplicatedAudits = Object.values(uniqueAudits);
+
+  renderAuditsList(deduplicatedAudits);
 
   console.log('User data:', user);
   console.log('User ID:', userId);
