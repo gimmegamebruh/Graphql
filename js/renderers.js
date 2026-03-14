@@ -24,7 +24,7 @@ function renderAuditsList(audits) {
     const statusText = pass ? "PASS" : "FAIL";
     const badgeClass = pass ? "badge pass" : "badge fail";
 
-    const name = a.group?.object?.name || `Group #${a.groupId}`;
+    const name = a.object?.name || 'Unknown Project';
     const date = fmtDate(a.createdAt);
 
     return `

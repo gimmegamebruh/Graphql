@@ -63,20 +63,27 @@ async function loadProfile(token) {
 
   const groupIds = (myGroupsData.group_user || []).map(g => g.groupId).filter(Boolean);
 
-  let auditsData = { audit: [] };
+  let auditsData = { result: [] };
   if (groupIds.length > 0) {
     const auditsReceivedQuery = `
     {
-      audit(
+      result(
         where: {
+          grade: { _gte: 1 }
+          object: { type: { _eq: "project" } }
           groupId: { _in: [${groupIds.join(",")}] }
-          grade: { _is_null: false }
           auditorId: { _neq: ${userId} }
         }
         order_by: { createdAt: desc }
       ) {
-        id groupId grade createdAt auditorId
-        group { object { name type } }
+        grade
+        path
+        createdAt
+        object {
+          id
+          name
+          type
+        }
       }
     }`;
     auditsData = await gqlRequest(auditsReceivedQuery, token);
@@ -84,8 +91,8 @@ async function loadProfile(token) {
 
   // Deduplicate audits by project name, keeping the most recent one
   const uniqueAudits = {};
-  auditsData.audit.forEach(audit => {
-    const projectName = audit.group?.object?.name || `Group #${audit.groupId}`;
+  auditsData.result.forEach(audit => {
+    const projectName = audit.object?.name || 'Unknown Project';
     if (!uniqueAudits[projectName] || new Date(audit.createdAt) > new Date(uniqueAudits[projectName].createdAt)) {
       uniqueAudits[projectName] = audit;
     }
