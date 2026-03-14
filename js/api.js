@@ -100,10 +100,35 @@ async function loadProfile(token) {
   const deduplicatedAudits = Object.values(uniqueAudits);
 
   // Populate overview section
-  if (overviewUsernameEl) overviewUsernameEl.textContent = user.login;
-  if (overviewUserIdEl) overviewUserIdEl.textContent = userId || 'Not available';
-  if (overviewTotalXpEl) overviewTotalXpEl.textContent = formatXP(sumXP(cachedTransactions));
-  if (overviewAuditsCountEl) overviewAuditsCountEl.textContent = deduplicatedAudits.length;
+  console.log('Populating overview...');
+  console.log('overviewUsernameEl:', overviewUsernameEl);
+  console.log('user.login:', user.login);
+  console.log('userId:', userId);
+  
+  if (overviewUsernameEl) {
+    overviewUsernameEl.textContent = user.login;
+    console.log('Set username to:', user.login);
+  } else {
+    console.log('overviewUsernameEl not found');
+  }
+  
+  if (overviewUserIdEl) {
+    overviewUserIdEl.textContent = userId || 'Not available';
+    console.log('Set user ID to:', userId || 'Not available');
+  } else {
+    console.log('overviewUserIdEl not found');
+  }
+  
+  if (overviewTotalXpEl) {
+    const xpText = formatXP(sumXP(cachedTransactions));
+    overviewTotalXpEl.textContent = xpText;
+    console.log('Set total XP to:', xpText);
+  }
+  
+  if (overviewAuditsCountEl) {
+    overviewAuditsCountEl.textContent = deduplicatedAudits.length;
+    console.log('Set audits count to:', deduplicatedAudits.length);
+  }
 
   renderAuditsList(deduplicatedAudits);
 
