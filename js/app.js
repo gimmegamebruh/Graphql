@@ -42,7 +42,7 @@ const xpByProjectChartEl = document.getElementById("xpByProjectChart");
 
 // ==================== APPLICATION STATE ====================
 
-let cachedTransactions = [];
+let cachedTransactions = []; 
 
 // ==================== INITIALIZATION ====================
 
