@@ -72,7 +72,6 @@ async function loadProfile(token) {
           grade: { _gte: 1 }
           object: { type: { _eq: "project" } }
           groupId: { _in: [${groupIds.join(",")}] }
-          auditorId: { _neq: ${userId} }
         }
         order_by: { createdAt: desc }
       ) {
