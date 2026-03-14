@@ -13,14 +13,19 @@ async function loadProfile(token) {
 
   const userQuery = `
   {
-    user { id login }
+    user { id login attrs }
   }`;
 
   const userData = await gqlRequest(userQuery, token);
+  console.log('User data response:', userData);
   if (!userData.user || !userData.user.length) throw new Error("Could not load user.");
 
   const user = userData.user[0];
   const userId = user.id;
+
+  console.log('User object:', user);
+  console.log('User ID:', userId);
+  console.log('User login:', user.login);
 
   const xpQuery = `
   {
@@ -79,9 +84,22 @@ async function loadProfile(token) {
 
   renderAuditsList(auditsData.audit);
 
+  console.log('User data:', user);
+  console.log('User ID:', userId);
+
   if (welcomeTextEl) welcomeTextEl.textContent = `@${user.login}`;
   const userIdTextEl = document.getElementById("userIdText");
-  if (userIdTextEl) userIdTextEl.textContent = `User ID: ${userId}`;
+  if (userIdTextEl) {
+    if (userId !== undefined && userId !== null) {
+      userIdTextEl.textContent = `User ID: ${userId}`;
+      console.log('Set user ID text to:', `User ID: ${userId}`);
+    } else {
+      userIdTextEl.textContent = 'User ID: Not available';
+      console.log('User ID not available');
+    }
+  } else {
+    console.log('userIdTextEl not found');
+  }
 
   drawXpLineChart(xpChartEl, cachedTransactions);
   drawXpByProjectBars(xpByProjectChartEl, cachedTransactions);
