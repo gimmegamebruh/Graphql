@@ -136,6 +136,45 @@ input:focus{
   margin-bottom: 16px;
 }
 
+/* OVERVIEW */
+.overview-section{
+  margin-bottom: 16px;
+}
+
+.overview-card{
+  background: linear-gradient(135deg, var(--panel2), var(--panel));
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.45);
+}
+
+.overview-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.overview-item{
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.overview-label{
+  font-size: 12px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.overview-value{
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+}
+
 /* BENTO */
 .bento{
   display:grid;
@@ -385,5 +424,14 @@ input:focus{
   
   .audits-list{
     max-height: 250px;
+  }
+
+  .overview-grid{
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .overview-value{
+    font-size: 14px;
   }
 }

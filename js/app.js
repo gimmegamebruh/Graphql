@@ -26,6 +26,13 @@ const errorEl = document.getElementById("error");
 const auditsListEl = document.getElementById("auditsList");
 const welcomeTextEl = document.getElementById("welcomeText");
 
+// Overview elements
+const overviewUsernameEl = document.getElementById("overviewUsername");
+const overviewUserIdEl = document.getElementById("overviewUserId");
+const overviewTotalXpEl = document.getElementById("overviewTotalXp");
+const overviewAuditsCountEl = document.getElementById("overviewAuditsCount");
+const overviewCurrentProjectEl = document.getElementById("overviewCurrentProject");
+
 // Transaction lists
 const txPreviewList = document.getElementById("trans-list");
 const txFullList = document.getElementById("txFullList");

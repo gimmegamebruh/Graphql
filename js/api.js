@@ -99,6 +99,17 @@ async function loadProfile(token) {
   });
   const deduplicatedAudits = Object.values(uniqueAudits);
 
+  // Populate overview section
+  if (overviewUsernameEl) overviewUsernameEl.textContent = user.login;
+  if (overviewUserIdEl) overviewUserIdEl.textContent = userId || 'Not available';
+  if (overviewTotalXpEl) overviewTotalXpEl.textContent = formatXP(sumXP(cachedTransactions));
+  if (overviewAuditsCountEl) overviewAuditsCountEl.textContent = deduplicatedAudits.length;
+
+  // Get current project (most recent from XP transactions)
+  const currentProject = cachedTransactions.length > 0 ?
+    cachedTransactions[cachedTransactions.length - 1].object.name : 'None';
+  if (overviewCurrentProjectEl) overviewCurrentProjectEl.textContent = currentProject;
+
   renderAuditsList(deduplicatedAudits);
 
   console.log('User data:', user);
