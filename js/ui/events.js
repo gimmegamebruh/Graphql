@@ -1,12 +1,3 @@
-/**
- * Event handlers for user interactions
- */
-
-// ==================== EVENT HANDLERS ====================
-
-/**
- * Handles login button click
- */
 loginBtn?.addEventListener("click", async () => {
   try {
     errorEl.textContent = "";
@@ -20,9 +11,6 @@ loginBtn?.addEventListener("click", async () => {
   }
 });
 
-/**
- * Handles logout button click
- */
 logoutBtn?.addEventListener("click", () => {
   removeToken();
   cachedTransactions = [];
@@ -40,17 +28,11 @@ logoutBtn?.addEventListener("click", () => {
   showLogin();
 });
 
-/**
- * Handles "See more XP" button click
- */
 seeMoreXpBtn?.addEventListener("click", () => {
   showTransactions();
   renderTx(txFullList, cachedTransactions);
 });
 
-/**
- * Handles "Back to profile" button click
- */
 backToProfileBtn?.addEventListener("click", () => {
   showProfileHome();
 });

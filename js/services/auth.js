@@ -1,15 +1,15 @@
-async function loginRequest(id, password){
-  const SIGNIN_URL = "https://learn.reboot01.com/api/auth/signin"
-  const credentials = btoa(id + ":" + password)
+async function loginRequest(id, password) {
+  const SIGNIN_URL = "https://learn.reboot01.com/api/auth/signin";
+  const credentials = btoa(id + ":" + password);
 
   const response = await fetch(SIGNIN_URL, {
     method: "POST",
     headers: {
       "Authorization": "Basic " + credentials
     }
-  })
+  });
 
-  if (!response.ok){
+  if (!response.ok) {
     throw new Error("Invalid credentials");
   }
 
@@ -18,14 +18,14 @@ async function loginRequest(id, password){
   return jwt_token;
 }
 
-function setToken(jwt_token){
+function setToken(jwt_token) {
   localStorage.setItem("jwt", jwt_token);
 }
 
-function getToken(){
+function getToken() {
   return localStorage.getItem("jwt");
 }
 
-function removeToken(){
+function removeToken() {
   localStorage.removeItem("jwt");
 }

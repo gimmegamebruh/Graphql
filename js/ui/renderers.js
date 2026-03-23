@@ -1,13 +1,3 @@
-/**
- * Rendering functions for lists and charts
- */
-
-// ==================== LIST RENDERING ====================
-
-/**
- * Renders the audits list in the UI
- * @param {Array} audits - Array of audit objects
- */
 function renderAuditsList(audits) {
   if (!auditsListEl) return;
 
@@ -18,13 +8,13 @@ function renderAuditsList(audits) {
 
   auditsListEl.innerHTML = audits.slice(0, 30).map(a => {
     const gradeNum = typeof a.grade === "number" ? a.grade : null;
-    const grade = gradeNum === null ? "—" : gradeNum.toFixed(2);
+    const grade = gradeNum === null ? "-" : gradeNum.toFixed(2);
 
     const pass = gradeNum !== null && gradeNum >= 1;
     const statusText = pass ? "PASS" : "FAIL";
     const badgeClass = pass ? "badge pass" : "badge fail";
 
-    const name = a.object?.name || 'Unknown Project';
+    const name = a.object?.name || "Unknown Project";
     const date = fmtDate(a.createdAt);
 
     return `
@@ -42,12 +32,6 @@ function renderAuditsList(audits) {
   }).join("");
 }
 
-/**
- * Renders transaction list in specified element
- * @param {HTMLElement} listEl - Element to render transactions in
- * @param {Array} transactions - Array of transaction objects
- * @param {number|null} limit - Maximum number of transactions to show
- */
 function renderTx(listEl, transactions, limit = null) {
   if (!listEl) return;
 
@@ -59,7 +43,7 @@ function renderTx(listEl, transactions, limit = null) {
   }
 
   listEl.innerHTML = items.map(t => {
-    const name = t.object?.name || t.path || "—";
+    const name = t.object?.name || t.path || "-";
     const type = t.object?.type || "xp";
     const amount = formatBytes(t.amount);
 
@@ -76,13 +60,6 @@ function renderTx(listEl, transactions, limit = null) {
   }).join("");
 }
 
-// ==================== CHART RENDERING ====================
-
-/**
- * Draws XP progression line chart
- * @param {SVGElement} svgEl - SVG element to draw chart in
- * @param {Array} transactions - Array of transaction objects
- */
 function drawXpLineChart(svgEl, transactions) {
   if (!svgEl) return;
 
@@ -132,8 +109,8 @@ function drawXpLineChart(svgEl, transactions) {
     `;
   }).join("");
 
-  const startLabel = new Date(minX).toISOString().slice(0,10);
-  const endLabel = new Date(maxX).toISOString().slice(0,10);
+  const startLabel = new Date(minX).toISOString().slice(0, 10);
+  const endLabel = new Date(maxX).toISOString().slice(0, 10);
 
   svgEl.innerHTML = `
     <g>
@@ -147,25 +124,20 @@ function drawXpLineChart(svgEl, transactions) {
   `;
 }
 
-/**
- * Draws horizontal bar chart showing XP by project
- * @param {SVGElement} svgEl - SVG element to draw chart in
- * @param {Array} transactions - Array of transaction objects
- */
 function drawXpByProjectBars(svgEl, transactions) {
   if (!svgEl) return;
 
   const w = 700;
   const rowH = 28;
-  const padL = 260; // space for names
-  const padR = 90;  // space for amounts
+  const padL = 260;
+  const padR = 90;
   const padT = 18;
   const padB = 18;
 
   const items = (transactions || [])
     .filter(t => typeof t.amount === "number" && t.amount > 0)
     .map(t => ({
-      name: t.object?.name || t.path || "—",
+      name: t.object?.name || t.path || "-",
       amount: t.amount
     }));
 
@@ -174,7 +146,6 @@ function drawXpByProjectBars(svgEl, transactions) {
     return;
   }
 
-  // group by project name
   const map = new Map();
   for (const it of items) map.set(it.name, (map.get(it.name) || 0) + it.amount);
 
@@ -195,7 +166,7 @@ function drawXpByProjectBars(svgEl, transactions) {
     const barX2 = xScale(g.amount);
     const barW = Math.max(2, barX2 - padL);
 
-    const label = g.name.length > 34 ? g.name.slice(0, 34) + "…" : g.name;
+    const label = g.name.length > 34 ? g.name.slice(0, 34) + "..." : g.name;
 
     return `
       <text x="${padL - 10}" y="${yMid}" text-anchor="end" font-size="12"

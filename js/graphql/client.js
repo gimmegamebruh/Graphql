@@ -1,11 +1,11 @@
 const GRAPHQL_URL = "https://learn.reboot01.com/api/graphql-engine/v1/graphql";
 
-async function gqlRequest(query, jwt_token) {
+async function gqlRequest(query, jwtToken) {
   const res = await fetch(GRAPHQL_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": "Bearer " + jwt_token
+      "Authorization": "Bearer " + jwtToken
     },
     body: JSON.stringify({ query })
   });
